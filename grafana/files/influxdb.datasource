@@ -1,0 +1,1 @@
+{"id":1,"orgId":1,"name":"influxdb","type":"influxdb_08","access":"proxy","url":"http://127.0.0.1:8086","password":"metricsp","user":"metricsu","database":"metrics","basicAuth":false,"basicAuthUser":"","basicAuthPassword":"","isDefault":true,"jsonData":null}

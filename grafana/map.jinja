@@ -1,0 +1,46 @@
+# vim: ft=jinja
+
+{% import_yaml 'grafana/defaults.yaml' as defaults %}
+
+{##
+
+  Import the grafana structure from this file. It contains all the variables
+  for the grafana states.
+
+  The variables are derived from the following sources, in this order:
+
+  1. Start with defaults from defaults.yaml (defaults)
+  2. Override with os_family specific settings (os_override)
+  3. Finally override with pillar (grafana)
+
+  I'm aware grains.filter_by can do all the merging, but I think the
+  code below is easier to understand than a single call to filter_by.
+
+##}
+
+{% set os_override = salt['grains.filter_by']({
+    'Debian': {},
+    'Arch': {},
+    'RedHat': {},
+  },
+  grain="os_family",
+  default="Arch",
+)
+%}
+
+{% set grafana = {} %}}
+{% do grafana.update(defaults['grafana']) %}
+{% do grafana.update(os_override) %}
+{% do grafana.update(salt['pillar.get']('grafana')) %}
+
+{## Compose the filename if it hasn't been overridden above ##}
+{% if grafana.filename is not defined %}
+{%  if grains['os_family'] == 'Debian' %}
+{%   do grafana.update({"filename": "grafana_" + grafana['version'] + "_amd64.deb"}) %}
+{%  elif grains['os_family'] == 'RedHat' %}
+{%   do grafana.update({"filename": "grafana-" + grafana['version'] + "-1.x86_64.rpm"}) %}
+{%  else %}
+{%   do grafana.update({"filename": "grafana-" + grafana['version'] + "-1.x86_64.rpm"}) %}
+{%  endif %}
+{% endif %}
+{% do grafana.update({ "filename_sha256": grafana['signatures'][grafana['filename']] }) %}

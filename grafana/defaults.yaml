@@ -1,0 +1,33 @@
+# vi: set ft=yaml :
+grafana:
+  version: latest
+  signatures:
+    grafana_2.1.0_amd64.deb: b824c8358ff07f76f0d9eb35e9441f6f9e591819ad8bc70db4b0c904a8e7130e
+    grafana-2.1.0-1.x86_64.rpm: 1b436b286bd464e65eeb2a9b393da0986569fe483e1053b01c092b2e590d8399
+    grafana_2.1.1-pre1_amd64.deb: 404a02777f320cdd0e627f40aa36f45d026657838a3ea8ba05d90f178178e278  
+
+    # You'll figure this out...
+    grafana_latest_amd64.deb: 404a02777f320cdd0e627f40aa36f45d026657838a3ea8ba05d90f178178e278  
+
+  # This maps to /etc/grafana/grafana.ini
+  config:
+    server:
+      protocol: http
+      #http_addr: 0.0.0.0
+      #http_port: 3000
+      domain: localgrafana
+
+    analytics:
+      reporting_enabled: false
+
+    security:
+      admin_user: admin
+      admin_password: admin
+      secret_key: override_me_in_pillar
+
+      disable_gravatar: false
+
+    users:
+      allow_sign_up: false
+      allow_org_create: false
+
